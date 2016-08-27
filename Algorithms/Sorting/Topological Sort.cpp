@@ -54,9 +54,8 @@ void Graph::TopologicalSort(){
     }
 }
 
-int main()
-{
-    // Create a graph given in the above diagram
+int main(){
+    
     Graph g(6);
     g.addEdge(5, 2);
     g.addEdge(5, 0);
