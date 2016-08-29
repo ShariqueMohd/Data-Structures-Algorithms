@@ -1,3 +1,5 @@
+// Sparse Table for Range Minimum Query.
+
 #include<iostream>
 #include<cstdio>
 #include<algorithm>
