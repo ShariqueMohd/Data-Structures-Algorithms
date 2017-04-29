@@ -3,6 +3,7 @@
             - Count the numbers smaller than K in range [L,R]
 */
 
+
 #include<bits/stdc++.h>
 
 #define pb push_back
@@ -26,9 +27,11 @@ vector<int> Merge(vector<int>& A, vector<int>& B){
             res.pb(B[j]); j += 1;
         }
     }
+
     while(i<N){
         res.pb(A[i]); i+=1;
     }
+
     while(j<M){
         res.pb(B[j]); j+=1;
     }
@@ -47,12 +50,12 @@ void build(int node, int L, int R){
     MST[node] = Merge(MST[2*node], MST[2*node+1]);  // Merge two sorted arrays
 }
 
-void query(int node, int L, int R, int x, int y, int K){
+int query(int node, int L, int R, int x, int y, int K){
     if(R < x || L > y)
         return 0;
 
     if(x <= L && R <= y){
-        return upper_bound(MST[node].begin(), MST[node].end(), K);
+        return upper_bound(MST[node].begin(), MST[node].end(), K) - MST[node].begin();
     }
 
     int mid =  (x+y)>>1;
