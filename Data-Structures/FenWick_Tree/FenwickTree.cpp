@@ -1,54 +1,54 @@
-#include<bits/stdc++.h>
-using namespace std;
-int getsum(int BitTr[],int ind)
-{
-	int sum=0;
-	ind=ind+1;
-	while(ind>0)
-	{
-		sum+=BitTr[ind];
-		ind-=(ind & (-ind));
-	}
-	return sum;
-}
-void update(int BitTr[],int n,int ind,int v)
-{
-	ind=ind+1;
-	while(ind<=n)
-	{
-		BitTr[ind]+=v;
-		ind+=(ind & (-ind));
-	}
-}
-int *construct(int arr1[],int n)
-{
-	int i;
-	int *BitTr= new int[n+1];
-	for(i=0;i<n+1;i++)
-		BitTr[i]=0;
-	for(i=0;i<n;i++)
-		update(BitTr,n,i,arr1[i]);
-	return BitTr;
-}
-int main()
-{
-	int n;
-	cin >> n;
-	int arr[n];
-	for(int i=0;i<n;i++)
-	{
-		cin >> arr[i];	
-	}
-	int *BitTr=construct(arr,n);
-	cout <<"sum of elem for arr[0..5]="<< getsum(BitTr,5)<< endl;
-	//for(int i=0;i<n;i++)
-	//{
-	//	cout << arr[i]<< " "<< BitTr[i]<<endl;
-	//}
-	cout <<"update add 6  to arr[3]"<<endl;
-	arr[3]+=6;
-	update(BitTr,n,3,6);
-	cout <<"sum of elem for arr[0..5]="<< getsum(BitTr,5)<< endl;
+#include <bits/stdc++.h>
 
-	return 0;
+using namespace std;
+const int N = 1e5+5;
+
+// T=int
+int B1[N], B2[N];
+int n;
+
+// Range Query, Range Update
+template<typename T>
+void update(T *FT,int ind, T val) {
+    for(; ind<=n; ind+=ind&(-ind))
+        FT[ind] += val;
+}
+
+// add val in [a..b]
+template<typename T>
+void updateRange(int a, int b, T val) {
+    update(B1,a,val);
+    update(B1,b+1,-val);
+    update(B2,a,val*(a-1));
+    update(B2,b+1,-val*(b));
+}
+
+template<typename T>
+T query(T *FT, int ind) {
+    T sum = 0;
+    for(; ind>0; ind -= ind&(-ind)) {
+        sum += FT[ind];
+    }
+    return sum;
+}
+
+auto query(int ind) {
+    return query(B1,ind)*ind - query(B2,ind);
+}
+
+// query in [a..b]
+auto query(int a, int b) {
+    return query(b) - query(a-1);
+}
+
+int main() {
+    n = 5;
+    updateRange(1,3,1);
+    updateRange(2,3,-1);
+    updateRange(3,5,2);
+    cout << query(1,3) << "\t3\n";
+    cout << query(2,2) << "\t0\n";
+    cout << query(3,5) << "\t6\n";
+
+    return 0;
 }
